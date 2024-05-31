@@ -1,0 +1,90 @@
+package Pages;
+
+
+import org.testng.annotations.AfterTest;
+
+import java.util.*;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class VMDatabase {
+// Connection object
+static Connection con = null;
+// Constant for Database URL
+private static String DB_URL = "***";
+//Database Username
+private static String DB_USER = "***";
+// Database Password
+private static String DB_PASSWORD = "***";
+
+@BeforeTest
+public void setUp() throws Exception {
+try{
+	// Database connection
+	String dbClass = "org.postgresql.Driver";
+	Class.forName(dbClass);
+	
+	}
+	catch (Exception e)
+	{
+	e.printStackTrace();
+}
+}
+
+@Test
+public List<String> databaseQueryTest(String query) {
+	
+	//List<String> queryResultList = new ArrayList<>();
+//	final List<List<String>> rowList = new LinkedList<List<String>>();
+	final List<String> columnList = new LinkedList<String>();
+	
+	
+	try{
+		// Get connection to DB
+		Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+	
+		//set statement variable as create statement method of connection
+		Statement stmt = con.createStatement();	
+		// Get the contents of user info table from DB
+		ResultSet res = stmt.executeQuery(query);
+				
+		java.sql.ResultSetMetaData meta = res.getMetaData();
+		final int columnCount = meta.getColumnCount();
+		
+	
+		while (res.next())
+		{
+
+
+		    for (int column = 1; column <= columnCount; ++column) 
+		    {
+		        final Object value = res.getObject(column);
+		        columnList.add(String.valueOf(value));
+		    }
+
+		}
+		
+	}
+	catch(Exception e)
+	{
+		//printStackTrace is a method  of the Java throwables class, helpful for pinpoint which line of code caused excetion(s)
+		e.printStackTrace();
+	}
+	return columnList;
+}
+
+@AfterTest
+public void tearDown() throws Exception {
+	// Close DB connection
+	if (con != null) {
+	con.close();
+}
+}
+}
