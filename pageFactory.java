@@ -48,7 +48,7 @@ public class pageFactory {
 		
 		try {
 			Thread.sleep(3000);
-			String expectedUrl = "https://ui-us-east-1.systemsreporting-qa.aws.gwl.com/platform-react-app-ui/feature-sr-4228--snapshot/index.html#/";
+			String expectedUrl = "URL";
 			String currentUrl = driver.getCurrentUrl();
 		assertEquals(expectedUrl, currentUrl);
 			
